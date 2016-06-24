@@ -1,0 +1,8 @@
+.required{
+  color: white;
+  background-color: red;
+}
+.error{
+  border:solid 1px;
+  padding: 3px;
+}
