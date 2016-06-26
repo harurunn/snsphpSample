@@ -41,6 +41,14 @@ if(!empty($_POST)){
     exit();
   }
 }
+
+//書き直し
+if($_REQUEST['action'] == 'rewrite'){
+  $_POST = $_SESSION['join'];
+  //画像は再び値を返せないので!emptyで$errorが入るようにしてやる
+  $error['rewrite'] = true;
+}
+
  ?>
 
 <!DOCTYPE html>
