@@ -1,8 +1,27 @@
 <?php
 session_start();
+require('../dbConnect.php');
 
 if(!isset($_SESSION['join'])){
   header('Location: index.php');
+  exit();
+}
+
+if(!empty($_POST)){
+  //登録処理をする
+  $sql = sprintf('INSERT INTO members SET name="%s", email="%s",
+  password="%s", picture="%s", created="%s"',
+
+    mysqli_real_escape_string($db, $_SESSION['join']['name']),
+    mysqli_real_escape_string($db, $_SESSION['join']['email']),
+    mysqli_real_escape_string($db, sha1($_SESSION['join']['password'])),
+    mysqli_real_escape_string($db, $_SESSION['join']['image']),
+    date('Y-m-d H:i:s')
+  );
+  mysqli_query($db, $sql) or exit(mysqli_error($db));
+  unset($_SESSION['join']);
+
+  header('Location: thanks.php');
   exit();
 }
 
@@ -10,6 +29,7 @@ if(!isset($_SESSION['join'])){
 <!-- 入力内容確認ページ -->
 <p>記入した内容でいい場合は「登録する」ボタンをクリックしてください</p>
 <form action="" method="post">
+  <!-- <input type="hidden" name="action" value="submit" /> -->
   <dl>
     <dt>ニックネーム</dt>
     <dd>
@@ -31,5 +51,5 @@ if(!isset($_SESSION['join'])){
   </dl>
   <!--　&laquo«マーク　&nbsp半角スペース　-->
   <div><a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a>
-    | <input type="submit" value="登録する" /></div>
+    | <input type="submit" name="action value="登録する" /></div>
 </form>

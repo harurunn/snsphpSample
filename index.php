@@ -1,4 +1,6 @@
 <?php
+require('../dbConnect.php');
+
 //セッションの情報の初期化
 session_start();
 
@@ -27,6 +29,18 @@ if(!empty($_POST)){
     $ext = substr($fileName, -3);
     if($ext != 'jpg' && $ext != 'gif'){
       $error['image'] = 'type';
+    }
+  }
+
+  //アカウント重複チェック
+  if(empty($error)){
+    $sql = sprintf('SELECT COUNT(*) AS cnt FROM members WHERE email="%s"',
+    mysqli_real_escape_string($db, $_POST['email'])
+  );
+  $record = mysqli_query($db, $sql) or die(mysqli_error($db));
+  $table = mysqli_fetch_assoc($record);
+  if($table['cnt'] > 0){
+    $error['email'] = 'duplicate';
     }
   }
 
@@ -88,6 +102,9 @@ if($_REQUEST['action'] == 'rewrite'){
       <?php if($error['email'] == 'blank'): ?>
         <p><span class="error">* メールアドレスを入力してください</span></p>
       <?php endif; ?>
+      <?php if($error['email'] == 'duplicate'): ?>
+        <p><span class="error">*指定されたメールアドレスはすでに使用されています</span></p>
+      <?php endif; ?>
     </dd>
     <dt>パスワード<span class="required">必須</span></dt>
     <dd>
@@ -104,7 +121,7 @@ if($_REQUEST['action'] == 'rewrite'){
          <p><span class="error">* パスワードは４文字以上で入力してください</span></p>
        <?php endif; ?>
     </dd>
-    <dt>写真など<dt>
+    <dt>写真など</dt>
     <dd>
       <input type="file" name="image" size="35" />
       <?php if($error['image'] == 'type'): ?>
