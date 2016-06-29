@@ -51,5 +51,5 @@ if(!empty($_POST)){
   </dl>
   <!--　&laquo«マーク　&nbsp半角スペース　-->
   <div><a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a>
-    | <input type="submit" name="action value="登録する" /></div>
+    | <input type="submit" name="action" value="登録" /></div>
 </form>
